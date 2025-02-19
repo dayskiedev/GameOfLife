@@ -14,8 +14,8 @@
 
 
 // TODO make these requirements in the file so they can be custom for each
-int WIDTH = 50;
-int HEIGHT = 25;
+int WIDTH;
+int HEIGHT;
 char ALIVE = 'X';
 char DEAD = '.';
 
@@ -55,6 +55,43 @@ int main()
 {
     // endgoal: implement hashlife?
 
+
+    // open file now 
+    std::ifstream spawnFile ("./spawns/spawn1234.txt");
+    if (spawnFile.is_open()) {
+        std::cout << "opened!" << std::endl;
+    }
+    else {
+        std::cout << "ERROR: Unable to open file." << std::endl;
+        return -1;
+    }
+
+    // get width and height of area
+
+
+    // first  way to auto width and height, requires extra numbers in file, cant copy existing ideas without checking W H
+    std::string line{};
+    
+    // width = read length of first line, height count the number of lines
+    int count{ 0 };
+    std::getline(spawnFile, line);
+    if (line.length() <= 0) {
+        std::cout << "Error, unable to determine width!\n";
+        return -1;
+    }
+    WIDTH = line.length();
+    count++; // increase count as the first getline is the first line 
+             // now we have to loop through the lines
+    while (!spawnFile.eof()) {
+        std::getline(spawnFile, line);
+        count++;
+    }
+    HEIGHT = count;
+    std::cout << "Width: " << WIDTH << " Height: " << HEIGHT << std::endl;
+    
+    spawnFile.clear(); // removes eof flag
+    spawnFile.seekg(0); // brings it back to the start of the file
+
     //create board alognside copyboard
     char** BOARD = new char* [HEIGHT];
     char** copyBoard = new char* [HEIGHT];
@@ -64,20 +101,8 @@ int main()
         copyBoard[i] = new char[WIDTH];
     }
 
-    //fill with dead cells
 
-    // open file now 
-    std::ifstream spawnFile ("./spawns/spawn0.txt");
-    if (spawnFile.is_open()) {
-        std::cout << "opened!" << std::endl;
-    }
-    else {
-        std::cout << "ERROR: Unable to open file." << std::endl;
-        return -1;
-    }
-
-    std::string line;
-    int count = 0;
+    count = 0;
     while (std::getline(spawnFile, line)) {
         for (int i = 0; i < line.length(); ++i) {
             BOARD[count][i] = line[i];
