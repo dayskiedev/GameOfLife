@@ -13,19 +13,23 @@
 // a cell is brought to life if it has exactly 3 neihbours
 
 
-// TODO make these requirements in the file so they can be custom for each
+// todo: investegate 
+
 int WIDTH;
 int HEIGHT;
 char ALIVE = 'X';
 char DEAD = '.';
 
 void PrintBoard(char** board) {
-    
+    std::string arrayLine{};
+
     for (int i = 0; i < HEIGHT; ++i) {
+        arrayLine = "";
+
         for (int j = 0; j < WIDTH; ++j) {
-            std::cout << board[i][j];
+            arrayLine += board[i][j];
         }
-        std::cout << std::endl;
+        std::cout << arrayLine << std::endl;
     }
 }
 
@@ -54,10 +58,11 @@ int cellCount(char** board, int r, int c) {
 int main()
 {
     // endgoal: implement hashlife?
+    // print faster
 
 
     // open file now 
-    std::ifstream spawnFile ("./spawns/spawn1234.txt");
+    std::ifstream spawnFile ("./spawns/spawn117p18.txt");
     if (spawnFile.is_open()) {
         std::cout << "opened!" << std::endl;
     }
@@ -79,13 +84,15 @@ int main()
         std::cout << "Error, unable to determine width!\n";
         return -1;
     }
+
     WIDTH = line.length();
     count++; // increase count as the first getline is the first line 
              // now we have to loop through the lines
     while (!spawnFile.eof()) {
-        std::getline(spawnFile, line);
+        std::getline(spawnFile, line); // not way to check for bad data
         count++;
     }
+
     HEIGHT = count;
     std::cout << "Width: " << WIDTH << " Height: " << HEIGHT << std::endl;
     
@@ -135,6 +142,6 @@ int main()
 
         PrintBoard(BOARD);
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        system("cls");
+        system("cls"); // clear screen (makes it windows only though.
     }
 }
